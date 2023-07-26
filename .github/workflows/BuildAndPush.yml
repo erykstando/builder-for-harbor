@@ -21,11 +21,6 @@ jobs:
           docker build . -t hellojs:${{ github.sha }}
           docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
           docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
-          echo 0
-          DIGEST=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
-          echo $DIGEST
-          echo 1
-          docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }}
       -
         name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
