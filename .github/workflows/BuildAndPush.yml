@@ -8,26 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
         name: Login to Harbor
         run: |
           docker login --username '${{ secrets.ROBOT_NAME }}' --password '${{ secrets.ROBOT_TOKEN }}' ${{ secrets.REGISTRY }}
       -
-        name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
-
-      - name: Image digest
+        name: Docker build and push
         run: |
-          echo "${{ steps.docker_build.outputs.digest }}" 
+          docker build . -t hellojs:${{ github.sha }}
+          docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+          docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} > $digest
+          echo digest
+
       -
         name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
@@ -37,7 +29,7 @@ jobs:
 
       - name: Sign image 
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/library/hellojs@${{ steps.docker_build.outputs.digest }}"
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/library/hellojs@$digest
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
