@@ -21,9 +21,9 @@ jobs:
           docker build . -t hellojs:${{ github.sha }}
           docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
           docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+          echo 0
           digest=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
           echo $digest
-          docker image inspect hellojs:${{ github.sha }}
 
       -
         name: Install Cosign
