@@ -10,6 +10,7 @@ jobs:
       -
         name: Login to Harbor
         run: |
+          ls -la
           docker login --username '${{ secrets.ROBOT_NAME }}' --password '${{ secrets.ROBOT_TOKEN }}' ${{ secrets.REGISTRY }}
       -
         name: Docker build and push
