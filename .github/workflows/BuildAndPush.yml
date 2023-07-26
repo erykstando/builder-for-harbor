@@ -1,0 +1,50 @@
+name: build-and-push
+
+on:
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Harbor
+        run: |
+          docker login --username '${{ secrets.ROBOT_NAME }}' --password '${{ secrets.ROBOT_TOKEN }}' ${{ secrets.REGISTRY }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+
+      - name: Image digest
+        run: |
+          echo "${{ steps.docker_build.outputs.digest }}" 
+      -
+        name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+
+      - name: Check cosign instal
+        run: cosign version
+
+      - name: Sign image 
+        run: |
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/library/hellojs@${{ steps.docker_build.outputs.digest }}"
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+
+      - name: Validate image 
+        run: |
+          cosign verify --key env://COSIGN_PUBLIC_KEY "${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}"
+        env:
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
