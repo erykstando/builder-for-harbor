@@ -24,7 +24,8 @@ jobs:
           echo 0
           digest=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
           echo $digest
-
+          echo 1
+          docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }}
       -
         name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
