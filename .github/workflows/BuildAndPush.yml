@@ -35,12 +35,12 @@ jobs:
 
       - name: Sign image 
         run: |
+          DIGEST=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
           echo $DIGEST
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY $DIGEST
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: $DIGEST
 
       - name: Validate image 
         run: |
