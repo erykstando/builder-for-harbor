@@ -21,7 +21,7 @@ jobs:
           docker build . -t hellojs:${{ github.sha }}
           docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
           docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
-          docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} > $digest
+          digest=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
           echo digest
 
       -
