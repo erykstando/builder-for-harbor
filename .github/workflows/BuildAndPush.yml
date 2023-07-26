@@ -33,7 +33,7 @@ jobs:
 
       - name: Sign image 
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/library/hellojs@$digest
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/library/$digest
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
