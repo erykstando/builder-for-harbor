@@ -22,8 +22,8 @@ jobs:
           docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
           docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
           echo 0
-          digest=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
-          echo $digest
+          DIGEST=$( docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }} )
+          echo $DIGEST
           echo 1
           docker inspect --format='{{index .RepoDigests 0}}' hellojs:${{ github.sha }}
       -
@@ -35,9 +35,9 @@ jobs:
 
       - name: Sign image 
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY $digest
+          cosign sign --yes --key ${{ secrets.COSIGN_KEY }} $DIGEST
         env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+          #COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
 
       - name: Validate image 
