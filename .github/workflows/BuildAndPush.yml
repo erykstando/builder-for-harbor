@@ -35,10 +35,11 @@ jobs:
 
       - name: Sign image 
         run: |
-          cosign sign --yes --key ${{ secrets.COSIGN_KEY }} $DIGEST
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY env://DIGEST
         env:
-          #COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          DIGEST: $DIGEST
 
       - name: Validate image 
         run: |
