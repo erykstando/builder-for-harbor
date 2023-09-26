@@ -38,7 +38,7 @@ jobs:
 
       - name: Validate image 
         run: |
-          cosign verify --key env://COSIGN_PUBLIC_KEY "${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}"
+          cosign verify --key env://COSIGN_PUBLIC_KEY "${{ secrets.REGISTRY }}/eryks-test/hellojs:${{ github.sha }}"
         env:
           COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
