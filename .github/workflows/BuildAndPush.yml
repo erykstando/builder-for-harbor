@@ -18,7 +18,7 @@ jobs:
         name: Docker build and push
         run: |
           docker build . -t hellojs:${{ github.sha }}
-          docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+          docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/eryks-test/hellojs:${{ github.sha }}
           docker push ${{ secrets.REGISTRY }}/eryks-test/hellojs:${{ github.sha }}
       -
         name: Install Cosign
