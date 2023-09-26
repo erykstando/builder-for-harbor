@@ -19,7 +19,7 @@ jobs:
         run: |
           docker build . -t hellojs:${{ github.sha }}
           docker tag hellojs:${{ github.sha }} ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY }}/library/hellojs:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY }}/eryks-test/hellojs:${{ github.sha }}
       -
         name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
