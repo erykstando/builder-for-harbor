@@ -29,10 +29,11 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
-          
-      - name: List Docker Images
-        run: |
-          docker images
+      -  
+        name: Docker Metadata
+        uses: docker/metadata-action@v4.4.0
+        with:
+          images: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
       - 
         name: Sign image with a key
         run: |
