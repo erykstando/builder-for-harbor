@@ -30,7 +30,7 @@ jobs:
           push: true
           tags: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
           config-inline: |
-            ['provenance=false']           
+            provenance: false           
       -  
         name: Docker Metadata
         uses: docker/metadata-action@v4.4.0
