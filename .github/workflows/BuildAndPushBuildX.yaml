@@ -10,6 +10,8 @@ jobs:
       - 
         name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
+        with:
+          cosign-release: 'v2.2.0' # optional
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,7 +42,7 @@ jobs:
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}"
         env:
-          TAGS: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
+          TAGS: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
