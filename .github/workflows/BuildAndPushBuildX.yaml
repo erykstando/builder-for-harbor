@@ -40,16 +40,14 @@ jobs:
       - 
         name: Sign image with a key
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}"
+          cosign sign --no --key env://COSIGN_PRIVATE_KEY ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}
         env:
-          TAGS: ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
       - 
         name: Validate image 
         run: |
-          cosign verify --key env://COSIGN_PUBLIC_KEY "${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}"
+          cosign verify --key env://COSIGN_PUBLIC_KEY ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx@sha256:${{ steps.build-and-push.outputs.digest }}
         env:
           COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
