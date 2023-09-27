@@ -40,7 +40,7 @@ jobs:
       - 
         name: Sign image with a key
         run: |
-          cosign sign --no --key env://COSIGN_PRIVATE_KEY ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${{ secrets.REGISTRY }}/eryks-test/hellojs-buildx:${{ github.sha }}
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
